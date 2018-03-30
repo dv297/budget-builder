@@ -1,27 +1,43 @@
 const express = require('express');
 const path = require('path');
-const MongoClient = require('mongodb').MongoClient;
+const graphqlHTTP = require('express-graphql');
+const { connectDatabase } = require('./database');
+
+const { root, schema } = require('./graphql');
 
 const PORT = process.env.PORT || 5000;
 const DB_USER = process.env.BUDGET_BUILDER_DB_USER;
 const DB_PASSWORD = process.env.BUDGET_BUILDER_DB_PASSWORD;
+const DB_SERVER = process.env.BUDGET_BUILDER_DB_SERVER;
 
-if (!DB_USER || !DB_PASSWORD) {
-  throw new Error('Database username or password environment variables are not defined');
+if (!DB_USER || !DB_PASSWORD || !DB_SERVER) {
+  throw new Error('Required database environment variables are not defined');
 }
 
-const connectionString = `mongodb://${DB_USER}:${DB_PASSWORD}@ds125469.mlab.com:25469/budget-builder`;
-MongoClient.connect(connectionString, (err, client) => {
-  if (err) {
-    console.log('Error connecting to database: ', err);
-  }
+const app = express();
 
-  console.log('Connected to database');
-});
+app.use('/graphql', graphqlHTTP({
+  schema: schema,
+  rootValue: root,
+  graphiql: true,
+}));
 
-express()
+app
   .use(express.static(path.join(__dirname, 'public')))
   .set('views', path.join(__dirname, 'views'))
-  .set('view engine', 'ejs')
-  .get('/', (req, res) => res.send('def'))
-  .listen(PORT, () => console.log(`Listening on ${PORT}`));
+  .set('view engine', 'ejs');
+
+
+connectDatabase({
+  username: DB_USER,
+  password: DB_PASSWORD,
+  databaseHost: DB_SERVER,
+}, (err) => {
+  if (err) {
+    console.log('Error connecting database', err);
+  } else {
+    app.listen(PORT, () => {
+      console.log(`Server started on ${PORT}`);
+    });
+  }
+});
