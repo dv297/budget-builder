@@ -1,14 +1,6 @@
 const { GraphQLSchema, GraphQLObjectType, GraphQLString, GraphQLList } = require('graphql');
-const { getDatabase } = require('../database');
-const { ObjectId } = require('mongodb');
-
-const UserType = new GraphQLObjectType({
-  name: 'User',
-  fields: {
-    _id: { type: GraphQLString },
-    username: { type: GraphQLString },
-  },
-});
+const UserType = require('./types/User');
+const Users = require('../database/Users');
 
 const schema = new GraphQLSchema({
   mutation: new GraphQLObjectType({
@@ -20,15 +12,10 @@ const schema = new GraphQLSchema({
           username: { type: GraphQLString },
         },
         async resolve(rootValue, { username }) {
-          const users = getDatabase().collection('users');
-          const insertProcess = await users.insertOne({ username });
-
-          if (insertProcess.result.n === 1 && insertProcess.result.ok === 1) {
-            return users.findOne({ _id: insertProcess.insertedId });
-          }
-        }
-      }
-    }
+          return Users.addUser({ username });
+        },
+      },
+    },
   }),
   query: new GraphQLObjectType({
     name: 'queries',
@@ -36,9 +23,8 @@ const schema = new GraphQLSchema({
       users: {
         type: GraphQLList(UserType),
         async resolve() {
-          const users = await getDatabase().collection('users').find().toArray();
-          return users;
-        }
+          return Users.getAllUsers();
+        },
       },
       user: {
         type: UserType,
@@ -46,8 +32,7 @@ const schema = new GraphQLSchema({
           id: { type: GraphQLString },
         },
         async resolve(parent, { id }) {
-          const users = getDatabase().collection('users');
-          return users.findOne({ _id: ObjectId(id) });
+          return Users.getUserById(id);
         },
       },
     },
