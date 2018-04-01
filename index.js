@@ -3,7 +3,7 @@ const path = require('path');
 const graphqlHTTP = require('express-graphql');
 
 const { connectDatabase } = require('./database');
-const { root, schema } = require('./graphql');
+const { schema } = require('./graphql');
 
 const PORT = process.env.PORT || 5000;
 const DB_USER = process.env.BUDGET_BUILDER_DB_USER;
@@ -18,7 +18,6 @@ const app = express();
 
 app.use('/graphql', graphqlHTTP({
   schema: schema,
-  rootValue: root,
   graphiql: true,
 }));
 
