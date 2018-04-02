@@ -1,5 +1,7 @@
-const UserType = require('./UserType');
+const schema = require('./schema');
+const resolvers = require('./resolvers');
 
 module.exports = {
-  UserType,
+  schema,
+  resolvers,
 };
