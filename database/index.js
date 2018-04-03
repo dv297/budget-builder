@@ -16,8 +16,8 @@ exports.connectDatabase = ({ username, password, databaseHost }, done) => {
   const connectionOptions = {
     auth: {
       user: username,
-      password: password
-    }
+      password: password,
+    },
   };
   MongoClient.connect(connectionString, connectionOptions, (err, client) => {
     if (err) {

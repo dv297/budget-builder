@@ -16,27 +16,32 @@ if (!DB_USER || !DB_PASSWORD || !DB_SERVER) {
 
 const app = express();
 
-app.use('/graphql', graphqlHTTP({
-  schema: schema,
-  graphiql: true,
-}));
+app.use(
+  '/graphql',
+  graphqlHTTP({
+    schema: schema,
+    graphiql: true,
+  }),
+);
 
 app
   .use(express.static(path.join(__dirname, 'public')))
   .set('views', path.join(__dirname, 'views'))
   .set('view engine', 'ejs');
 
-
-connectDatabase({
-  username: DB_USER,
-  password: DB_PASSWORD,
-  databaseHost: DB_SERVER,
-}, (err) => {
-  if (err) {
-    console.log('Error connecting database', err);
-  } else {
-    app.listen(PORT, () => {
-      console.log(`Server started on ${PORT}`);
-    });
-  }
-});
+connectDatabase(
+  {
+    username: DB_USER,
+    password: DB_PASSWORD,
+    databaseHost: DB_SERVER,
+  },
+  (err) => {
+    if (err) {
+      console.log('Error connecting database', err);
+    } else {
+      app.listen(PORT, () => {
+        console.log(`Server started on ${PORT}`);
+      });
+    }
+  },
+);
