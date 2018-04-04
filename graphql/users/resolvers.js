@@ -25,6 +25,13 @@ const resolvers = {
       });
       return getUserFieldResolvers(user);
     },
+    removeBudgetFromUser: async (rootValue, { removeBudgetFromUserInput: { userId, budgetId } }) => {
+      const user = await Users.removeBudget({
+        userId,
+        budgetId,
+      });
+      return getUserFieldResolvers(user);
+    },
   },
 };
 

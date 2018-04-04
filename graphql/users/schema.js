@@ -9,6 +9,11 @@ const schema = `
     budgetId: String
     userId: String
   }
+  
+  input RemoveBudgetFromUserInput {
+    budgetId: String
+    userId: String
+  }
 `;
 
 module.exports = schema;

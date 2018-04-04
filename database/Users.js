@@ -1,4 +1,5 @@
 const { ObjectId } = require('mongodb');
+const produce = require('immer').default;
 
 const { getDatabase } = require('../database');
 
@@ -31,8 +32,35 @@ const Users = {
     const databaseUserId = ObjectId(userId);
 
     const user = await users.findOne({ _id: databaseUserId });
+    let updatedBudgetList = user.budgets || [];
 
-    const updatedBudgetList = user.budgets ? [...user.budgets, budgetId] : [];
+    const indexOfPreexistingEntry = updatedBudgetList.findIndex((budget) => budget === budgetId);
+
+    if (indexOfPreexistingEntry === -1) {
+      updatedBudgetList = [...user.budgets, budgetId];
+    }
+
+    const updateProcess = await users.findOneAndUpdate(
+      { _id: databaseUserId },
+      { $set: { budgets: updatedBudgetList } },
+    );
+
+    if (
+      updateProcess.lastErrorObject.n === 1 &&
+      updateProcess.lastErrorObject.updatedExisting &&
+      updateProcess.ok === 1
+    ) {
+      return users.findOne({ _id: databaseUserId });
+    }
+  },
+
+  async removeBudget({ userId, budgetId }) {
+    const users = getDatabase().collection(COLLECTION);
+    const databaseUserId = ObjectId(userId);
+
+    const user = await users.findOne({ _id: databaseUserId });
+
+    const updatedBudgetList = produce(user.budgets, (budgets) => budgets.filter((budget) => budget !== budgetId));
     const updateProcess = await users.findOneAndUpdate(
       { _id: databaseUserId },
       { $set: { budgets: updatedBudgetList } },

@@ -18,6 +18,7 @@ const schemaDefinition = `
       createUser(username: String): User
       createBudget(createBudgetInput: CreateBudgetInput): Budget
       addBudgetToUser(addBudgetToUserInput: AddBudgetToUserInput): User
+      removeBudgetFromUser(removeBudgetFromUserInput: RemoveBudgetFromUserInput): User
     }
 `;
 
