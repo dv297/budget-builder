@@ -11,13 +11,13 @@ const getUserFieldResolvers = (user) => ({
 const resolvers = {
   Query: {
     users: () => Users.getAllUsers(),
-    user: async (rootValue, { _id }) => {
-      const user = await Users.getUserById(_id);
+    user: async (rootValue, parameters) => {
+      const user = await Users.getUserById(parameters._id);
       return getUserFieldResolvers(user);
     },
   },
   Mutation: {
-    createUser: (rootValue, parameters) => Users.createUser(parameters),
+    createUser: (rootValue, { createUserInput }) => Users.createUser(createUserInput),
     addBudgetToUser: async (rootValue, { addBudgetToUserInput: { userId, budgetId } }) => {
       const user = await Users.addBudget({
         userId,

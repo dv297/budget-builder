@@ -1,11 +1,23 @@
 const { ObjectId } = require('mongodb');
 const produce = require('immer').default;
+const bcrypt = require('bcrypt');
 
-const { getDatabase } = require('../database');
+const { getDatabase } = require('./index');
 
 const COLLECTION = 'users';
 
 const Users = {
+  async validatePassword(username, password, secret) {
+    const users = getDatabase().collection(COLLECTION);
+    const user = await users.findOne({ username });
+
+    if (user && bcrypt.compareSync(password, user.password)) {
+      return user._id;
+    }
+
+    return null;
+  },
+
   async getAllUsers() {
     return getDatabase()
       .collection(COLLECTION)
@@ -18,9 +30,13 @@ const Users = {
     return users.findOne({ _id: ObjectId(id) });
   },
 
-  async createUser({ username }) {
+  async createUser({ username, password }) {
     const users = getDatabase().collection(COLLECTION);
-    const insertProcess = await users.insertOne({ username });
+    const saltRounds = 10;
+    const salt = bcrypt.genSaltSync(saltRounds);
+    const passwordHash = bcrypt.hashSync(password, salt);
+
+    const insertProcess = await users.insertOne({ username, password: passwordHash });
 
     if (insertProcess.result.n === 1 && insertProcess.result.ok === 1) {
       return users.findOne({ _id: insertProcess.insertedId });

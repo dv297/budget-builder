@@ -1,9 +1,9 @@
 const { makeExecutableSchema } = require('graphql-tools');
 const merge = require('lodash.merge');
 
-const User = require('./users');
-const Budget = require('./budgets');
-const Transaction = require('./transactions');
+const User = require('./users/index');
+const Budget = require('./budgets/index');
+const Transaction = require('./transactions/index');
 
 const schemaDefinition = `
     type Query {
@@ -15,7 +15,7 @@ const schemaDefinition = `
     }
     
     type Mutation {
-      createUser(username: String): User
+      createUser(createUserInput: CreateUserInput): User
       createBudget(createBudgetInput: CreateBudgetInput): Budget
       addBudgetToUser(addBudgetToUserInput: AddBudgetToUserInput): User
       removeBudgetFromUser(removeBudgetFromUserInput: RemoveBudgetFromUserInput): User

@@ -1,4 +1,5 @@
 .idea/
+dist/
 
 # Node build artifacts
 node_modules

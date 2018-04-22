@@ -1,4 +1,4 @@
-const { getDatabase } = require('../database');
+const { getDatabase } = require('./index');
 const { ObjectId } = require('mongodb');
 
 const COLLECTION = 'budgets';
