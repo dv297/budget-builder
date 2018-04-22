@@ -6,6 +6,8 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const path = require('path');
 const graphqlHTTP = require('express-graphql');
+const webpack = require('webpack');
+const webpackConfig = require('../../webpack.config');
 
 const routes = require('./routes/index');
 const { connectDatabase } = require('./database/index');
@@ -66,15 +68,34 @@ app.use(
   })),
 );
 
-const distDirectory  = path.join(__dirname, '../', '../', 'dist');
-app.use('/dist', express.static(distDirectory))
+const distDirectory = path.join(__dirname, '../', '../', 'dist');
+app
+  .use('/dist', express.static(distDirectory))
   .set('views', path.join(__dirname, 'views'))
   .set('view engine', 'ejs');
 
 app.use(routes);
 
+const compiler = webpack(webpackConfig);
+app.use(
+  require('webpack-dev-middleware')(compiler, {
+    noInfo: true,
+    publicPath: webpackConfig.output.publicPath,
+  }),
+);
+
+app.use(require('webpack-hot-middleware')(compiler));
+
 app.get('*', (req, res, next) => {
-  res.sendFile(path.join(distDirectory, 'index.html'));
+  const filename = path.join(compiler.outputPath, 'index.html');
+  compiler.outputFileSystem.readFile(filename, function(err, result) {
+    if (err) {
+      return next(err);
+    }
+    res.set('content-type', 'text/html');
+    res.send(result);
+    res.end();
+  });
 });
 
 connectDatabase(

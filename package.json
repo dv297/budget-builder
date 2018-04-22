@@ -8,7 +8,7 @@
   "main": "index.js",
   "scripts": {
     "format": "prettier --write --config prettier.config.js \"{index.js,{database,graphql}/**/*.js}\"",
-    "dev": "npm-run-all --parallel dev:server compile:client:watch",
+    "dev": "npm-run-all --parallel dev:server",
     "dev:client": "webpack-dev-server --mode development --devtool inline-source-map --hot",
     "dev:server": "nodemon src/server/index.js",
     "compile:client": "webpack --mode production",
@@ -49,6 +49,7 @@
     "nodemon": "^1.17.2",
     "npm-run-all": "^4.1.2",
     "prettier": "^1.11.1",
+    "react-hot-loader": "^4.0.0",
     "request": "^2.81.0",
     "style-loader": "^0.21.0",
     "tape": "^4.7.0",

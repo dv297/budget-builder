@@ -7,11 +7,11 @@ const outputDirectory = 'dist';
 
 module.exports = {
   mode: 'development',
-  entry: './src/client/index.js',
+  entry: ['webpack-hot-middleware/client', './src/client/index.js'],
   output: {
     path: path.join(__dirname, outputDirectory),
     filename: 'bundle.js',
-    publicPath: '/dist',
+    publicPath: '/',
   },
   module: {
     rules: [
@@ -41,8 +41,6 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './public/index.html',
       favicon: './public/favicon.ico',
-      alwaysWriteToDisk: true
     }),
-    new HtmlWebpackHarddiskPlugin()
   ],
 };
