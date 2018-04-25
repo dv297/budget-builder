@@ -7,7 +7,7 @@ const outputDirectory = 'dist';
 
 module.exports = {
   mode: 'development',
-  entry: ['webpack-hot-middleware/client', './src/client/index.js'],
+  entry: ['babel-polyfill', 'webpack-hot-middleware/client', './src/client/index.js'],
   output: {
     path: path.join(__dirname, outputDirectory),
     filename: 'bundle.js',
