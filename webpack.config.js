@@ -1,12 +1,12 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const outputDirectory = 'dist';
 
 module.exports = {
   mode: 'development',
+  devtool: 'eval-source-map',
   entry: ['babel-polyfill', 'webpack-hot-middleware/client', './src/client/index.js'],
   output: {
     path: path.join(__dirname, outputDirectory),

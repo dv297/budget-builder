@@ -1,19 +1,28 @@
 import React from 'react';
-import { Container, Menu, Button, Image } from 'semantic-ui-react';
-import { Link, withRouter } from 'react-router-dom';
+import { Container, Menu, Button, Image, Icon } from 'semantic-ui-react';
+import { Link, Route, withRouter } from 'react-router-dom';
 
+import './NavBar.css';
 import AuthenticationContext from '../AuthenticationContext/AuthenticationContext';
+
+const DashboardNavbarItems = () => (
+  <Menu.Item as={Link} to="/addBudget">
+    <Icon name="add circle" color="green" />
+    Add Budget
+  </Menu.Item>
+);
 
 const NavBar = (props) => {
   return (
     <AuthenticationContext.Consumer>
-      {({ user, token, logout }) => {
+      {({ username, token, logout }) => {
         return (
           <Container>
             <Menu.Item as={Link} to="/" active>
               Home
             </Menu.Item>
-            {!user && (
+            <Route path="/dashboard" render={() => <DashboardNavbarItems />} />
+            {!username && (
               <Menu.Item position="right">
                 <Button as={Link} to="/login">
                   Log in
@@ -23,14 +32,19 @@ const NavBar = (props) => {
                 </Button>
               </Menu.Item>
             )}
-            {user && (
+            {username && (
               <Menu.Item position="right">
-                <Image src="https://api.adorable.io/avatars/285/abott@adorable.png" avatar />
-                {user}
-                <Button onClick={() => {
-                  logout();
-                  props.history.push("/");
-                }}>
+                <div className="username-container">
+                  <Image src="https://api.adorable.io/avatars/285/abott@adorable.png" avatar />
+                  {username}
+                </div>
+                <Button
+                  basic
+                  onClick={() => {
+                    logout();
+                    props.history.push('/');
+                  }}
+                >
                   Log Out
                 </Button>
               </Menu.Item>

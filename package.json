@@ -7,13 +7,17 @@
   },
   "main": "index.js",
   "scripts": {
-    "format": "prettier --write --config prettier.config.js \"{index.js,{database,graphql}/**/*.js}\"",
+    "format": "prettier --write --config prettier.config.js \"src/**/*.js\"",
     "dev": "nodemon src/server/index.js",
     "build": "webpack --mode production",
     "start": "node src/server/index.js",
     "test": "node test.js"
   },
   "dependencies": {
+    "apollo-cache-inmemory": "^1.1.12",
+    "apollo-client": "^2.2.8",
+    "apollo-client-preset": "^1.0.8",
+    "apollo-link-http": "^1.5.4",
     "axios": "^0.18.0",
     "babel-polyfill": "^6.26.0",
     "bcrypt": "^2.0.1",
@@ -24,6 +28,7 @@
     "express-graphql": "^0.6.12",
     "express-session": "^1.15.6",
     "graphql": "^0.13.2",
+    "graphql-tag": "^2.9.1",
     "graphql-tools": "^2.23.1",
     "html-webpack-harddisk-plugin": "^0.2.0",
     "immer": "^1.2.1",
@@ -34,6 +39,7 @@
     "passport-local": "^1.0.0",
     "prop-types": "^15.6.1",
     "react": "^16.3.2",
+    "react-apollo": "^2.1.3",
     "react-dom": "^16.3.2",
     "react-router-dom": "^4.2.2",
     "semantic-ui-react": "^0.79.1"

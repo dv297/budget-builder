@@ -9,7 +9,6 @@ import LoginForm from '../components/LoginForm/LoginForm';
 class Login extends React.Component {
   static propTypes = {
     from: PropTypes.string,
-    onLoginSuccess: PropTypes.func.isRequired,
   };
 
   state = {
@@ -36,16 +35,15 @@ class Login extends React.Component {
 
     return (
       <AuthenticationContext.Consumer>
-        {({ setUser, setToken }) => {
+        {({ setIdentity }) => {
           return (
             <div>
               <LoginForm
                 showError={this.state.errorPresent}
                 onSubmit={({ username, password }) => {
                   login({ username, password })
-                    .then((token) => {
-                      setUser(username);
-                      setToken(token);
+                    .then(({ token, id }) => {
+                      setIdentity({ token, username, id });
                     })
                     .then(this.onLoginFormSuccess)
                     .catch(this.onLoginFormError);

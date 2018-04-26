@@ -36,7 +36,11 @@ const Users = {
     const salt = bcrypt.genSaltSync(saltRounds);
     const passwordHash = bcrypt.hashSync(password, salt);
 
-    const insertProcess = await users.insertOne({ username, password: passwordHash });
+    const insertProcess = await users.insertOne({
+      username,
+      password: passwordHash,
+      budgets: [],
+    });
 
     if (insertProcess.result.n === 1 && insertProcess.result.ok === 1) {
       return users.findOne({ _id: insertProcess.insertedId });

@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {
-  Menu,
-} from 'semantic-ui-react';
+import { Menu } from 'semantic-ui-react';
 
 const fixedMenuStyle = {
   backgroundColor: '#fff',
@@ -22,13 +20,10 @@ class StickyLayout extends Component {
         <Menu borderless fixed="top" style={fixedMenuStyle}>
           {this.props.menu}
         </Menu>
-        <div style={{paddingTop: '55px'}}>
-          {this.props.content}
-        </div>
+        <div style={{ paddingTop: '55px' }}>{this.props.content}</div>
       </div>
     );
   }
 }
 
 export default StickyLayout;
-
