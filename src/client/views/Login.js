@@ -1,10 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
+import { Container } from 'semantic-ui-react';
 
 import login from '../api/login';
 import AuthenticationContext from '../components/AuthenticationContext/AuthenticationContext';
 import LoginForm from '../components/LoginForm/LoginForm';
+import PaddedPage from '../components/PaddedPage/PaddedPage';
 
 class Login extends React.Component {
   static propTypes = {
@@ -34,25 +36,27 @@ class Login extends React.Component {
     }
 
     return (
-      <AuthenticationContext.Consumer>
-        {({ setIdentity }) => {
-          return (
-            <div>
-              <LoginForm
-                showError={this.state.errorPresent}
-                onSubmit={({ username, password }) => {
-                  login({ username, password })
-                    .then(({ token, id }) => {
-                      setIdentity({ token, username, id });
-                    })
-                    .then(this.onLoginFormSuccess)
-                    .catch(this.onLoginFormError);
-                }}
-              />
-            </div>
-          );
-        }}
-      </AuthenticationContext.Consumer>
+      <PaddedPage>
+        <Container>
+          <AuthenticationContext.Consumer>
+            {({ setIdentity }) => {
+              return (
+                <LoginForm
+                  showError={this.state.errorPresent}
+                  onSubmit={({ username, password }) => {
+                    login({ username, password })
+                      .then(({ token, id }) => {
+                        setIdentity({ token, username, id });
+                      })
+                      .then(this.onLoginFormSuccess)
+                      .catch(this.onLoginFormError);
+                  }}
+                />
+              );
+            }}
+          </AuthenticationContext.Consumer>
+        </Container>
+      </PaddedPage>
     );
   }
 }

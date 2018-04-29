@@ -22,7 +22,6 @@ router.post('/login', (req, res) => {
         expiresIn: '2 days',
       });
 
-      console.log(token);
       return res.json({ user, token, id: user._id });
     });
   })(req, res);
